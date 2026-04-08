@@ -42,13 +42,12 @@ public class GestoreOrdini
         else
         {
             statoOrdine = nuovoStato;
-
         }
 
     }
 
 
-    public void visuallizareOrdine(Pizza pizza)
+    public void visualizzaOrdine()
     {
          if(ordineCorrente.isEmpty())
         {
