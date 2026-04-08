@@ -1,5 +1,5 @@
 package gestione.observer;
 
-public class RepartoObserver {
-  
+public interface RepartoObserver {
+  void aggiorna(int idOrdine, String stato);
 }

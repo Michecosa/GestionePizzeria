@@ -1,18 +1,22 @@
-## Getting Started
+## Organizzazione del Progetto e Divisione del Lavoro
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Il progetto è stato sviluppato suddividendo l'implementazione dei Design Pattern richiesti
 
-## Folder Structure
+### Struttura delle Responsabilità
 
-The workspace contains two folders by default, where:
+La divisione dei compiti è stata definita come segue:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+#### **Donato**
+* **Decorator Pattern**: Implementazione dell'interfaccia `Pizza`, delle classi concrete e dei decoratori per gli ingredienti
+* **Singleton Pattern**: Progettazione della classe `GestoreOrdini`
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+#### **Michela**
+* **Observer Pattern**: Implementazione del sistema di notifiche che reagiscono in tempo reale ai cambi di stato della pizza.
+* **Main**: Sviluppo del punto di ingresso del programma e del menu interattivo
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+---
 
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### Tecnologie Utilizzate
+* **Linguaggio:** Java
+* **Pattern:** Decorator, Singleton, Observer
+* **Strumenti:** Gestione dei flussi tramite CLI (Command Line Interface)
