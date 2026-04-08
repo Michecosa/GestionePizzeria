@@ -1,7 +1,6 @@
 package gestione.singleton;
 
 import gestione.observer.Ordine;
-import gestione.decorator.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ public class GestoreOrdini {
 
     // ordine attuale
     private List<Ordine> storicoOrdini = new ArrayList<>();
-    private String statoOrdine;
 
     private GestoreOrdini() {}
 
