@@ -11,8 +11,6 @@ public class GestoreOrdini
     //ordine attuale
     private List<Pizza> ordineCorrente;
     
-
-
      private String statoOrdine;
     
      private GestoreOrdini() 
@@ -35,14 +33,16 @@ public class GestoreOrdini
         System.out.println("Aggiunto: " + pizza.getDescrizione());
     }
 
-    public void modificaStato(Pizza pizza)
+    public void modificaStato(String nuovoStato)
     {
-        if(ordineCorrente==null)
+        if(ordineCorrente.isEmpty())
         {
             System.out.println("Nessun ordine corrente");
         }
         else
         {
+            statoOrdine = nuovoStato;
+
         }
 
     }
@@ -50,13 +50,21 @@ public class GestoreOrdini
 
     public void visuallizareOrdine(Pizza pizza)
     {
-         if(ordineCorrente==null)
+         if(ordineCorrente.isEmpty())
         {
             System.out.println("Nessun ordine corrente");
         }
         else
         {
-
+             System.out.println("Ordine Corrente: ");
+            double tot=0;
+            
+            for(Pizza p: ordineCorrente)
+            {
+                System.out.println(" - " + p.getDescrizione() + 
+                                   " | Prezzo: " + p.getPrezzo());
+                tot += p.getPrezzo();
+            }
             
         }
 
