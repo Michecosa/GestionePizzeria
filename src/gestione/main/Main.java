@@ -3,9 +3,7 @@ package gestione.main;
 import gestione.decorator.*;
 import gestione.observer.*;
 import gestione.singleton.GestoreOrdini;
-
 import javax.swing.*;
-import java.awt.*;
 
 public class Main {
     static Pizza pizza = null;
@@ -16,13 +14,20 @@ public class Main {
     static String logText = "";
 
     public static void main(String[] args) {
-        JFrame f = new JFrame("Pizzeria");
+        // Look & Feel di sistema per rendere la finestra più nativa
+        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ignored) {}
+
+        JFrame f = new JFrame("Pizzeria Pro - Dashboard");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(600, 500);
+        f.setSize(700, 650);
+        f.setLocationRelativeTo(null); // Centra la finestra
 
         JEditorPane pane = new JEditorPane("text/html", "");
         pane.setEditable(false);
-        f.add(new JScrollPane(pane));
+        // Rende lo scroll più fluido
+        JScrollPane scrollPane = new JScrollPane(pane);
+        scrollPane.setBorder(null);
+        f.add(scrollPane);
 
         render(pane);
 
@@ -37,16 +42,18 @@ public class Main {
                 else if (cmd.equals("olive") && pizza != null) pizza = new OliveDecorator(pizza);
                 else if (cmd.equals("ordine") && pizza != null) {
                     Ordine o = new Ordine(pizza);
-                    o.aggiungiObserver(cucina); o.aggiungiObserver(forno); o.aggiungiObserver(consegna);
+                    o.aggiungiObserver(cucina);
+                    o.aggiungiObserver(forno);
+                    o.aggiungiObserver(consegna);
                     gestore.aggiungiOrdine(o);
-                    log("Ordine #" + gestore.getOrdini().size() + " creato: " + o);
+                    log("<b style='color:#27ae60;'>[SISTEMA]</b> Ordine #" + gestore.getOrdini().size() + " inviato con successo.");
                     pizza = null;
                 } else if (cmd.startsWith("stato:")) {
                     String[] parts = cmd.split(":");
                     int id = Integer.parseInt(parts[1]) - 1;
                     String stato = parts[2];
                     gestore.getOrdini().get(id).setStato(stato);
-                    log("Ordine #" + (id + 1) + " -> " + stato);
+                    log("<b style='color:#2980b9;'>[INFO]</b> Ordine #" + (id + 1) + " aggiornato a: " + stato);
                 }
                 render(pane);
             }
@@ -55,66 +62,105 @@ public class Main {
         f.setVisible(true);
     }
 
-    static void log(String s) { logText += s + "<br>"; }
+    static void log(String s) { 
+        logText = "• " + s + "<br>" + logText; // Log invertito per vedere subito l'ultimo
+    }
 
     static void render(JEditorPane pane) {
-        String pizzaInfo = pizza == null ? "nessuna" : pizza.getDescrizione() + " - " + pizza.getPrezzo() + " EUR";
+        String pizzaInfo = pizza == null ? "<i>Nessuna pizza selezionata</i>" : 
+                           "<b style='font-size:14px;'>" + pizza.getDescrizione().toUpperCase() + "</b><br>" +
+                           "<span style='color:#27ae60; font-size:16px;'>€ " + String.format("%.2f", (double)pizza.getPrezzo()) + "</span>";
 
-        StringBuilder ordini = new StringBuilder();
-        String statoStyle = "style='margin:1px 2px; padding:2px 6px; background:#4a90d9; color:white; border-radius:3px; text-decoration:none; font-size:11px;'";
+        StringBuilder ordiniHTML = new StringBuilder();
+        
+        // Stile per i badge degli stati
+        String baseBadge = "display:inline-block; margin:2px; padding:3px 7px; text-decoration:none; font-size:10px; color:white; font-weight:bold; border-radius:3px;";
+
         for (int i = 0; i < gestore.getOrdini().size(); i++) {
             Ordine o = gestore.getOrdini().get(i);
             int n = i + 1;
-            ordini.append("<tr style='background:").append(n % 2 == 0 ? "#fff0e8" : "white").append(";'>");
-            ordini.append("<td style='padding:5px 8px; border-bottom:1px solid #ddd;'>#").append(n).append("</td>");
-            ordini.append("<td style='padding:5px 8px; border-bottom:1px solid #ddd;'>").append(o).append("</td>");
-            ordini.append("<td style='padding:5px 8px; border-bottom:1px solid #ddd;'>");
-            for (String s : new String[]{"IN PREPARAZIONE", "IN COTTURA", "PRONTO", "CONSEGNATO"})
-                ordini.append("<a href='stato:").append(n).append(":").append(s).append("' ").append(statoStyle).append(">").append(s).append("</a> ");
-            ordini.append("</td></tr>");
+            String rowColor = (i % 2 == 0) ? "#ffffff" : "#fcfcfc";
+            
+            ordiniHTML.append("<tr bgcolor='").append(rowColor).append("'>")
+                      .append("<td style='padding:10px; border-bottom:1px solid #eee;'><b>#").append(n).append("</b></td>")
+                      .append("<td style='padding:10px; border-bottom:1px solid #eee;'>").append(o).append("</td>")
+                      .append("<td style='padding:10px; border-bottom:1px solid #eee;'>");
+            
+            // Pulsanti di stato colorati diversamente
+            String[] stati = {"IN PREPARAZIONE", "IN COTTURA", "PRONTO", "CONSEGNATO"};
+            String[] colori = {"#f39c12", "#e67e22", "#27ae60", "#7f8c8d"};
+            
+            for (int j = 0; j < stati.length; j++) {
+                ordiniHTML.append("<a href='stato:").append(n).append(":").append(stati[j])
+                          .append("' style='").append(baseBadge).append("background:").append(colori[j]).append(";'> ")
+                          .append(stati[j]).append(" </a> ");
+            }
+            ordiniHTML.append("</td></tr>");
         }
 
-        String btnStyle = "style='margin:2px 4px; padding:4px 10px; background:#e8390e; color:white; border-radius:4px; text-decoration:none; font-weight:bold; font-size:13px;'";
-        String ingStyle = "style='margin:2px 4px; padding:3px 8px; background:#f5a623; color:white; border-radius:4px; text-decoration:none; font-size:12px;'";
+        // CSS "Inline" per i pulsanti principali
+        String btnBase = "display:block; padding:8px 12px; text-decoration:none; color:white; font-weight:bold; text-align:center; border-radius:5px;";
+        String btnRed = btnBase + "background:#c0392b;";
+        String btnOrange = btnBase + "background:#d35400;";
+        String btnGreen = "display:block; padding:12px; text-decoration:none; color:white; font-weight:bold; text-align:center; background:#27ae60; border-radius:8px; font-size:14px;";
 
-        String html = "<html><body style='font-family:Arial; padding:14px; background:#fff8f0;'>"
-            + "<h2 style='color:#c0392b; margin-bottom:6px;'>Pizzeria Gestionale</h2>"
-            + "<hr style='border:1px solid #f0c0a0; margin-bottom:12px;'/>"
+        String html = "<html><body style='font-family:Sans-Serif; background:#f4f7f6; margin:0; padding:20px;'>"
+            + "<table width='100%' cellspacing='0' cellpadding='0'>"
+            + "<tr><td>"
+            + "  <h1 style='color:#2c3e50; margin:0;'>🍕 Pizzeria Dashboard</h1>"
+            + "  <p style='color:#7f8c8d; margin-top:5px;'>Gestione ordini e produzione in tempo reale</p>"
+            + "</td></tr>"
+            + "</table>"
+            
+            + "<hr size='1' color='#dcdde1' style='margin:20px 0;'>"
 
-            + "<div style='background:#fff3e0; border:1px solid #f5a623; border-radius:6px; padding:8px 12px; margin-bottom:12px;'>"
-            + "<b>Pizza corrente:</b> <span style='color:#c0392b;'>" + pizzaInfo + "</span>"
-            + "</div>"
-
-            + "<div style='margin-bottom:10px;'>"
-            + "<b style='font-size:13px;'>Scegli base:</b><br>"
-            + "<a href='margherita' " + btnStyle + ">Margherita</a>"
-            + "<a href='diavola' " + btnStyle + ">Diavola</a>"
-            + "</div>"
-
-            + "<div style='margin-bottom:10px;'>"
-            + "<b style='font-size:13px;'>Aggiungi ingrediente:</b><br>"
-            + "<a href='mozzarella' " + ingStyle + ">+ Mozzarella</a>"
-            + "<a href='salame' " + ingStyle + ">+ Salame</a>"
-            + "<a href='funghi' " + ingStyle + ">+ Funghi</a>"
-            + "<a href='olive' " + ingStyle + ">+ Olive</a>"
-            + "</div>"
-
-            + "<div style='margin-bottom:14px;'>"
-            + "<a href='ordine' style='padding:6px 16px; background:#27ae60; color:white; border-radius:5px; text-decoration:none; font-weight:bold; font-size:14px;'>✔ CREA ORDINE</a>"
-            + "</div>"
-
-            + "<b style='font-size:13px;'>Ordini:</b><br>"
-            + "<table style='border-collapse:collapse; margin-top:6px; width:100%;'>"
-            + "<tr style='background:#c0392b; color:white;'>"
-            + "<th style='padding:5px 8px; text-align:left;'>#</th>"
-            + "<th style='padding:5px 8px; text-align:left;'>Dettaglio</th>"
-            + "<th style='padding:5px 8px; text-align:left;'>Cambia stato</th></tr>"
-            + ordini
+            // Sezione Superiore: Creazione Pizza
+            + "<table width='100%' cellspacing='10' cellpadding='0'>"
+            + "<tr>"
+            + "  <td width='30%' valign='top' bgcolor='#ffffff' style='padding:15px; border:1px solid #dcdde1; border-radius:10px;'>"
+            + "    <b style='color:#7f8c8d;'>1. SELEZIONA BASE</b><br><br>"
+            + "    <a href='margherita' style='" + btnRed + "'>MARGHERITA</a><br>"
+            + "    <a href='diavola' style='" + btnRed + "'>DIAVOLA</a>"
+            + "  </td>"
+            + "  <td width='40%' valign='top' bgcolor='#ffffff' style='padding:15px; border:1px solid #dcdde1; border-radius:10px;'>"
+            + "    <b style='color:#7f8c8d;'>2. AGGIUNGI EXTRA</b><br><br>"
+            + "    <table width='100%'><tr>"
+            + "      <td><a href='mozzarella' style='" + btnOrange + "'>+ Mozzarella</a></td>"
+            + "      <td><a href='salame' style='" + btnOrange + "'>+ Salame</a></td>"
+            + "    </tr><tr>"
+            + "      <td><a href='funghi' style='" + btnOrange + "'>+ Funghi</a></td>"
+            + "      <td><a href='olive' style='" + btnOrange + "'>+ Olive</a></td>"
+            + "    </tr></table>"
+            + "  </td>"
+            + "  <td width='30%' valign='top' bgcolor='#f9f9f9' style='padding:15px; border:2px dashed #bdc3c7; border-radius:10px;'>"
+            + "    <b style='color:#7f8c8d;'>RIEPILOGO</b><br><br>"
+            +      pizzaInfo + "<br><br>"
+            + (pizza != null ? "<a href='ordine' style='" + btnGreen + "'>CONFERMA ORDINE</a>" : "")
+            + "  </td>"
+            + "</tr>"
             + "</table><br>"
 
-            + "<div style='background:#f4f4f4; border-left:4px solid #c0392b; padding:8px 12px; border-radius:4px; font-size:12px; color:#555;'>"
-            + "<b>Log:</b><br>" + logText
+            // Sezione Ordini
+            + "<div style='background:#ffffff; border:1px solid #dcdde1; border-radius:10px; padding:0;'>"
+            + "  <div style='background:#2c3e50; color:white; padding:10px 15px; border-radius:10px 10px 0 0;'>"
+            + "    <b style='font-size:14px;'>ELENCO ORDINI ATTIVI</b>"
+            + "  </div>"
+            + "  <table width='100%' cellspacing='0' cellpadding='0'>"
+            + "    <tr bgcolor='#f8f9fa'>"
+            + "      <th align='left' style='padding:10px; color:#7f8c8d; border-bottom:2px solid #eee;'>ID</th>"
+            + "      <th align='left' style='padding:10px; color:#7f8c8d; border-bottom:2px solid #eee;'>DETTAGLI PIZZA</th>"
+            + "      <th align='left' style='padding:10px; color:#7f8c8d; border-bottom:2px solid #eee;'>AZIONI STATO</th>"
+            + "    </tr>"
+            +      ordiniHTML.toString()
+            + "  </table>"
+            + "</div><br>"
+
+            // Sezione Log
+            + "<div style='background:#2d3436; color:#dfe6e9; padding:15px; border-radius:8px; font-family:Monospaced; font-size:11px;'>"
+            + "  <b style='color:#fab1a0;'>CONSOLE EVENTI:</b><br><br>"
+            +    (logText.isEmpty() ? "In attesa di operazioni..." : logText)
             + "</div>"
+            
             + "</body></html>";
 
         pane.setText(html);

@@ -10,7 +10,7 @@ public class SalameDecorator extends IngredienteDecorator
     @Override
     public String getDescrizione()
     {
-        return pizza.getDescrizione()+" + "+"Mozzarella";
+        return pizza.getDescrizione()+" + "+"Salame";
     }
     @Override
 

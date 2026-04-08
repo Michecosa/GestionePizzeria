@@ -10,7 +10,7 @@ public class FunghiDecorator extends IngredienteDecorator
     @Override
     public String getDescrizione()
     {
-        return pizza.getDescrizione()+" + "+"Mozzarella";
+        return pizza.getDescrizione()+" + "+"Funghi";
     }
     @Override
 
