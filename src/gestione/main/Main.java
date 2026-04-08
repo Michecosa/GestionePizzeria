@@ -34,20 +34,28 @@ public class Main {
                     pizzaInCreazione = (sc.nextInt() == 1) ? new Margherita() : new Diavola();
                     break;
                 case 2:
-                    if (pizzaInCreazione == null) break;
+                    if (pizzaInCreazione == null)
+                        break;
                     System.out.println("1.MozzarellaExtra, 2.Salame, 3.Funghi, 4.Olive");
                     int ing = sc.nextInt();
-                    if (ing == 1) pizzaInCreazione = new MozzarellaDecorator(pizzaInCreazione);
-                    else if (ing == 2) pizzaInCreazione = new SalameDecorator(pizzaInCreazione);
-                    else if (ing == 3) pizzaInCreazione = new FunghiDecorator(pizzaInCreazione);
-                    else if (ing == 4) pizzaInCreazione = new OliveDecorator(pizzaInCreazione);
+                    if (ing == 1)
+                        pizzaInCreazione = new MozzarellaDecorator(pizzaInCreazione);
+                    else if (ing == 2)
+                        pizzaInCreazione = new SalameDecorator(pizzaInCreazione);
+                    else if (ing == 3)
+                        pizzaInCreazione = new FunghiDecorator(pizzaInCreazione);
+                    else if (ing == 4)
+                        pizzaInCreazione = new OliveDecorator(pizzaInCreazione);
                     break;
 
                 case 3:
-                    if (pizzaInCreazione != null) System.out.println(pizzaInCreazione.getDescrizione() + " - " + pizzaInCreazione.getPrezzo() + "€");
+                    if (pizzaInCreazione != null)
+                        System.out.println(
+                                pizzaInCreazione.getDescrizione() + " - " + pizzaInCreazione.getPrezzo() + " EUR");
                     break;
                 case 4:
-                    if (pizzaInCreazione == null) break;
+                    if (pizzaInCreazione == null)
+                        break;
                     Ordine nuovo = new Ordine(pizzaInCreazione);
                     // Registro i reparti all'ordine
                     nuovo.aggiungiObserver(cucina);
@@ -63,8 +71,8 @@ public class Main {
                     int id = sc.nextInt();
                     System.out.println("Stato: 1.IN PREPARAZIONE, 2.IN COTTURA, 3.PRONTO, 4.CONSEGNATO");
                     int s = sc.nextInt();
-                    String[] stati = {"", "IN PREPARAZIONE", "IN COTTURA", "PRONTO", "CONSEGNATO"};
-                    gestore.getOrdini().get(id-1).setStato(stati[s]);
+                    String[] stati = { "", "IN PREPARAZIONE", "IN COTTURA", "PRONTO", "CONSEGNATO" };
+                    gestore.getOrdini().get(id - 1).setStato(stati[s]);
                     break;
 
                 case 6:

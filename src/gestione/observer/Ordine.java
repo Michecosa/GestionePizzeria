@@ -30,7 +30,7 @@ public class Ordine {
   }
 
   public String toString() {
-    return "#"+id+" - "+pizza.getDescrizione()+"["+stato+"] - "+String.format("%.2f", pizza.getPrezzo()+" EUR");
+    return "#"+id+" - "+pizza.getDescrizione()+"["+stato+"] - "+String.format("%.2f", pizza.getPrezzo())+" EUR";
   }
 
 }
