@@ -1,5 +1,19 @@
 package gestione.decorator;
 
-public class Pizza {
-  
+interface Pizza 
+{
+    String getDescrizione();
+    double getPrezzo();
+
 }
+
+
+
+
+
+
+
+
+
+
+
