@@ -1,5 +1,67 @@
 package gestione.singleton;
+import gestione.decorator.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GestoreOrdini {
-  
+public class GestoreOrdini 
+{
+    
+    private static GestoreOrdini istanza;
+
+    //ordine attuale
+    private List<Pizza> ordineCorrente;
+    
+
+
+     private String statoOrdine;
+    
+     private GestoreOrdini() 
+     {
+        ordineCorrente=new ArrayList<>();
+        statoOrdine="Nessun ordine";
+        
+    }
+
+     public static GestoreOrdini getInstance() {
+        if (istanza == null) {
+            istanza = new GestoreOrdini();
+        }
+        return istanza;
+    }
+
+
+    public void aggiungiOrdine(Pizza pizza) {
+        ordineCorrente.add(pizza);
+        System.out.println("Aggiunto: " + pizza.getDescrizione());
+    }
+
+    public void modificaStato(Pizza pizza)
+    {
+        if(ordineCorrente==null)
+        {
+            System.out.println("Nessun ordine corrente");
+        }
+        else
+        {
+        }
+
+    }
+
+
+    public void visuallizareOrdine(Pizza pizza)
+    {
+         if(ordineCorrente==null)
+        {
+            System.out.println("Nessun ordine corrente");
+        }
+        else
+        {
+
+            
+        }
+
+
+    }
+
 }
+
