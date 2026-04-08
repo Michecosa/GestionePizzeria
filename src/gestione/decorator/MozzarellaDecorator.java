@@ -1,6 +1,6 @@
 package gestione.decorator;
 
-class MozzarellaDecorator extends IngredienteDecorator
+public class MozzarellaDecorator extends IngredienteDecorator
 {
 
     public MozzarellaDecorator(Pizza pizza) {

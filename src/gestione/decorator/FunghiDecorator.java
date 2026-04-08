@@ -1,6 +1,6 @@
 package gestione.decorator;
 
-class FunghiDecorator extends IngredienteDecorator
+public class FunghiDecorator extends IngredienteDecorator
 {
 
     public FunghiDecorator(Pizza pizza) {

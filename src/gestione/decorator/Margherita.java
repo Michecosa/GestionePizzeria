@@ -1,6 +1,6 @@
 package gestione.decorator;
 
-class Margherita implements Pizza
+public class Margherita implements Pizza
 {
 
      @Override

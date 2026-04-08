@@ -1,6 +1,6 @@
 package gestione.decorator;
 
-interface Pizza 
+public interface Pizza 
 {
     String getDescrizione();
     double getPrezzo();

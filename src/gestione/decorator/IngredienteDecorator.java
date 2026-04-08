@@ -1,7 +1,7 @@
 package gestione.decorator;
 
 //classe astratta
-abstract class IngredienteDecorator implements Pizza
+public abstract class IngredienteDecorator implements Pizza
 {   
     protected Pizza pizza;
 

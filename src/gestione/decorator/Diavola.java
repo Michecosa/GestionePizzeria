@@ -1,6 +1,6 @@
 package gestione.decorator;
 
-class Diavola implements Pizza
+public class Diavola implements Pizza
 {
      @Override
     public String getDescrizione()
